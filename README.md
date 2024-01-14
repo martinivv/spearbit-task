@@ -1,66 +1,30 @@
-## Foundry
+# Spearbit Writing Exercise
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Wallet Protocol
 
-Foundry consists of:
+You are given an implementation for a smart contract wallet. There are two contracts
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+1. [`Implementation.sol`](contracts/Implementation.sol): Deployed once and used as implementation contract in `Proxy.sol`.
+2. [`Proxy.sol`](contracts/Proxy.sol): Each user has a unique `Proxy` deployment with the above implementation. This is a simply proxy contract which delegatecalls the implementation contract. It has an access control check that allows only the owner to use the fallback function.
 
-## Documentation
+The idea is that users can keep their funds, for example, ETH or ERC20 tokens in the Proxy. To use these funds, users can execute arbitrary calls and arbitrary delegatecalls by using the implementation contract (it has `callContract` and `delegatecallContract`). The implementation contract is deployed only once and reused to save gas.
 
-https://book.getfoundry.sh/
+There is a **critical bug** in the wallet protocol. The exercise is to find it and write it in markdown format, in accordance with the style guide.
 
-## Usage
+For simplicity, we expect
 
-### Build
+```md
+## Short title for the issue
 
-```shell
-$ forge build
+**Severity**: High / Medium / Low / Informational / Gas Optimisation
+
+Context: [`File.sol#L123`](github.com/permalink)
+
+Description of the attack.
+
+**Recommendation**: Description on how to avoid the issue.
 ```
 
-### Test
+Reference: [Style guide for writing Spearbit reports](https://hackmd.io/@spearbit/S1T63tOqt).
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+_Bonus_: There is simple, yet niche technique to avoid the critical issue by modifying `Implementation.sol`. Bonus point if you can include this in your recommendation. Another bonus point if your recommendation only requires changing a single word in `Implementation.sol` (and removing two more words).
